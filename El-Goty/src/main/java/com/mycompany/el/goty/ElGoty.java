@@ -3,7 +3,7 @@
  */
 
 package com.mycompany.el.goty;
-import Juego.Ventana;
+import Vista.Ventana;
 /**
  *
  * @author USER
