@@ -12,12 +12,14 @@ import javax.swing.JFrame;
  *
  * @author USER
  */
-public class Ventana extends Canvas{
+public class Ventana extends Canvas implements Runnable{
     private static final long serialVersionUID = 1L;
     private static final int ANCHO = 800;
     private static final int ALTO = 600;
+    private static volatile boolean enFuncionamiento = false;//definir si el juego esta corriendo o no
     private static final String NOMBRE = "theStore";
     private static JFrame ventana;
+    private static Thread thread;//ayuda a manejar cosas en paralelo para ello se impementa el runnable
     
     public Ventana(){
         setPreferredSize(new Dimension(ANCHO,ALTO));
@@ -29,5 +31,27 @@ public class Ventana extends Canvas{
         ventana.pack();
         ventana.setLocationRelativeTo(null);
         ventana.setVisible(true);
+    }
+    public synchronized void iniciar(){
+        enFuncionamiento = true;
+        thread = new Thread(this, "Graficos");
+        thread.start();
+    }
+    public synchronized void detener(){
+        try {
+            enFuncionamiento = false;
+
+            thread.join();// para no parar el thread de forma aburpta
+        } catch (InterruptedException ex) {
+            System.getLogger(Ventana.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }
+    }
+    @Override
+    public void run() {
+        System.nanoTime();
+      while(enFuncionamiento = true){//si enFuncionamiento es falso, el juego se para
+          
+      }
+     
     }
 }
