@@ -18,6 +18,10 @@ public class Ventana extends Canvas implements Runnable{
     private static final int ALTO = 600;
     private static volatile boolean enFuncionamiento = false;//definir si el juego esta corriendo o no
     private static final String NOMBRE = "theStore";
+    
+    private static int aps = 0;
+    private static int fps = 0;
+    
     private static JFrame ventana;
     private static Thread thread;//ayuda a manejar cosas en paralelo para ello se impementa el runnable
     
@@ -42,15 +46,45 @@ public class Ventana extends Canvas implements Runnable{
             enFuncionamiento = false;
 
             thread.join();// para no parar el thread de forma aburpta
-        } catch (InterruptedException ex) {
-            System.getLogger(Ventana.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
+    }
+    private void actualizar(){
+        aps++;
+    }
+    private void mostrar(){
+        fps++;
     }
     @Override
     public void run() {
-        System.nanoTime();
+        //importantes para que el juego no se sienta lento
+        final int NS_POR_SEGUNDO = 1000000000; //nanosegundos por segundo
+        final byte APS_OBJETIVO = 60; //actualizaciones por segundo
+        final double NS_POR_ACTUALIZACION = NS_POR_SEGUNDO / APS_OBJETIVO;
+        long referenciaActualizacion = System.nanoTime();
+        long referenciaContador = System.nanoTime();
+        double tiempoTranscurrido;
+        double delta = 0; // cantidad de tiempo que ha transcurrido hasta una actualizacion 
+        
       while(enFuncionamiento = true){//si enFuncionamiento es falso, el juego se para
+          final long inicioBucle = System.nanoTime();
+          tiempoTranscurrido = inicioBucle - referenciaActualizacion;
+          referenciaActualizacion = inicioBucle;
+          delta += tiempoTranscurrido / NS_POR_ACTUALIZACION;
           
+          while(delta >= 1){
+              actualizar();
+              delta --;
+          }
+          mostrar();
+          
+          if ( System.nanoTime() - referenciaContador > NS_POR_SEGUNDO){
+              ventana.setTitle(NOMBRE + " || APS " + aps + "|| FPS " + fps);
+              aps = 0;
+              fps = 0; 
+              referenciaContador = System.nanoTime();
+          }
       }
      
     }
