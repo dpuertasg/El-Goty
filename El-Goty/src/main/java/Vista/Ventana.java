@@ -4,6 +4,7 @@
  */
 package Vista;
 
+import Controlador.teclado;
 import java.awt.Canvas;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -24,9 +25,11 @@ public class Ventana extends Canvas implements Runnable{
     
     private static JFrame ventana;
     private static Thread thread;//ayuda a manejar cosas en paralelo para ello se impementa el runnable
-    
+    private static teclado Teclado;
     public Ventana(){
         setPreferredSize(new Dimension(ANCHO,ALTO));
+        Teclado = new teclado();
+        addKeyListener(Teclado);
         ventana = new JFrame(NOMBRE);
         ventana.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         ventana.setResizable(false);
@@ -51,6 +54,20 @@ public class Ventana extends Canvas implements Runnable{
         }
     }
     private void actualizar(){
+        Teclado.actualizar();
+        
+        if(Teclado.arriba){
+            System.out.println("arriba");
+        }
+        if(Teclado.abajo){
+            System.out.println("abajo");
+        }
+        if(Teclado.izquierda){
+            System.out.println("izquierda");
+        }
+        if(Teclado.derecha){
+            System.out.println("derecha");
+        }
         aps++;
     }
     private void mostrar(){
@@ -66,6 +83,8 @@ public class Ventana extends Canvas implements Runnable{
         long referenciaContador = System.nanoTime();
         double tiempoTranscurrido;
         double delta = 0; // cantidad de tiempo que ha transcurrido hasta una actualizacion 
+        
+        requestFocus();
         
       while(enFuncionamiento = true){//si enFuncionamiento es falso, el juego se para
           final long inicioBucle = System.nanoTime();
