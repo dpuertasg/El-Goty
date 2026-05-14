@@ -16,6 +16,12 @@ public class HojaSprites {
     private final int alto;
     private final int ancho;
     public final int[] pixeles;
+    
+    //coleccion hojas sprites
+    public static HojaSprites tienda = new HojaSprites("/Recursos/Texturas/Pink_Monster.png",320,320);//el yeison debe hacer la tienda
+    
+    
+    //fin de la conexion
     public HojaSprites(final String ruta,final int ancho, final int alto){
         this.ancho = ancho;
         this.alto = alto;
