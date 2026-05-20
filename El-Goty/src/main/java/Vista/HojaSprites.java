@@ -3,37 +3,38 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package Vista;
-
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 
-/**
- *
- * @author USER
- */
 public class HojaSprites {
     private final int alto;
     private final int ancho;
     public final int[] pixeles;
     
-    //coleccion hojas sprites
-    public static HojaSprites tienda = new HojaSprites("/Recursos/Texturas/Pink_Monster.png",320,320);//el yeison debe hacer la tienda
+    // Dejamos la ruta tal como la lee tu sistema de archivos de forma relativa
+    public static HojaSprites tienda = new HojaSprites("Recursos/Texturas/tienda.png", 320, 320);
     
-    
-    //fin de la conexion
-    public HojaSprites(final String ruta,final int ancho, final int alto){
+    public HojaSprites(final String ruta, final int ancho, final int alto){
         this.ancho = ancho;
         this.alto = alto;
+        this.pixeles = new int[ancho * alto];
         
-        pixeles = new int[ancho * alto];
         BufferedImage imagen;
         
-        try{
-        imagen = ImageIO.read(HojaSprites.class.getResource(ruta));
-        imagen.getRGB(0, 0, ancho, alto, pixeles, 0, ancho);
-        
-        } catch (Exception e){
+        // CORRECCIÓN DE RUTA: Leemos directamente el archivo del disco
+        try {
+            File archivo = new File(ruta);
+            if (!archivo.exists()) {
+                throw new RuntimeException("No se pudo encontrar el archivo en la ruta física: " + archivo.getAbsolutePath());
+            }
+            
+            imagen = ImageIO.read(new FileInputStream(archivo));
+            imagen.getRGB(0, 0, ancho, alto, pixeles, 0, ancho);
+            
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -41,5 +42,4 @@ public class HojaSprites {
     public int getAncho() {
         return ancho;
     }
-
 }

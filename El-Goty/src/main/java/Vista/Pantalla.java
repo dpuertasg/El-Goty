@@ -30,18 +30,33 @@ public class Pantalla {
             pixeles[i] = 0; 
         }
     }
-    public void mostrar(final int compensacionX, final int compensacionY){
-        for(int y = 0; y < alto; y++){
+   public void mostrar(final int compensacionX, final int compensacionY, Sprite sprite){
+        for(int y = 0; y < sprite.getLado(); y++){
             int posicionY = y + compensacionY;
+            
+            // Si el píxel se sale por arriba o por abajo de la pantalla, no lo dibujamos
             if(posicionY < 0 || posicionY >= alto){
                 continue;
             }
-            for(int x = 0; x < ancho; x++){
+            
+            for(int x = 0; x < sprite.getLado(); x++){
                 int posicionX = x + compensacionX;
-                 if(posicionX < 0 || posicionX >= ancho){
-                continue;
-            }
-                 pixeles[(posicionX + posicionY)* ancho] = Sprite.asfalto.pixeles[((x & MASCARA_SPRITE) + (y & MASCARA_SPRITE)) * LADO_SPRITE];
+                
+                // Si el píxel se sale por la izquierda o derecha de la pantalla, no lo dibujamos
+                if(posicionX < 0 || posicionX >= ancho){
+                    continue;
+                }
+                
+                // CORRECCIÓN FÓRMULA DE PANTALLA: x + y * ancho
+                int pixelPantalla = posicionX + (posicionY * ancho);
+                
+                // CORRECCIÓN FÓRMULA DE SPRITE: x + y * lado
+                int pixelSprite = x + (y * sprite.getLado());
+                
+                // Dibujamos de forma segura comprobando que no nos salgamos del array
+                if (pixelPantalla >= 0 && pixelPantalla < pixeles.length) {
+                    pixeles[pixelPantalla] = sprite.pixeles[pixelSprite];
+                }
             }
         }
     }

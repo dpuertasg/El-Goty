@@ -90,7 +90,7 @@ public class Ventana extends Canvas implements Runnable{
             return;
         }
         pantalla.limpiar();
-        pantalla.mostrar(x,y);
+        pantalla.mostrar(x,y,Sprite.asfalto);
         
         System.arraycopy(pantalla.pixeles,0,pixeles,0,pixeles.length);
         /*
