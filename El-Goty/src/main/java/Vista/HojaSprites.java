@@ -14,7 +14,6 @@ public class HojaSprites {
     private final int ancho;
     public final int[] pixeles;
     
-    // Dejamos la ruta tal como la lee tu sistema de archivos de forma relativa
     public static HojaSprites tienda = new HojaSprites("Recursos/Texturas/tienda.png", 320, 320);
     
     public HojaSprites(final String ruta, final int ancho, final int alto){
@@ -24,7 +23,7 @@ public class HojaSprites {
         
         BufferedImage imagen;
         
-        // CORRECCIÓN DE RUTA: Leemos directamente el archivo del disco
+        // Leer directamente el archivo del disco
         try {
             File archivo = new File(ruta);
             if (!archivo.exists()) {

@@ -24,7 +24,7 @@ public class Sprite {
         this.y = fila * lado;
         this.hoja = hoja;
         
-        // FÓRMULA CORREGIDA (Sin desbordes de Array)
+        // Sin desbordes de Array
         for(int y = 0; y < lado; y++){
             for(int x = 0; x < lado; x++){
                 // Posición exacta en el array unidimensional del Sprite pequeñito
