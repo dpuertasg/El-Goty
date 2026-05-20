@@ -70,16 +70,16 @@ public class Ventana extends Canvas implements Runnable{
         Teclado.actualizar();
         
         if(Teclado.arriba){
-            System.out.println("arriba");
+            y++;
         }
         if(Teclado.abajo){
-            System.out.println("abajo");
+            y--;
         }
         if(Teclado.izquierda){
-            System.out.println("izquierda");
+            x++;
         }
         if(Teclado.derecha){
-            System.out.println("derecha");
+            x--;
         }
         aps++;
     }
