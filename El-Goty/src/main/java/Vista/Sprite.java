@@ -17,6 +17,25 @@ public class Sprite {
     
     public static Sprite asfalto = new Sprite(32, 0, 0, HojaSprites.tienda);
     
+
+    public static Sprite[] monstruoCaminando = new Sprite[] {
+        new Sprite(32, 0, 0, HojaSprites.hojaMonstruo), //fotograma 1
+        new Sprite(32, 1, 0, HojaSprites.hojaMonstruo), //fotograma 2
+        new Sprite(32, 2, 0, HojaSprites.hojaMonstruo), //fotograma 3
+        new Sprite(32, 3, 0, HojaSprites.hojaMonstruo), //fotograma 4
+        new Sprite(32, 4, 0, HojaSprites.hojaMonstruo), //fotograma 5
+        new Sprite(32, 5, 0, HojaSprites.hojaMonstruo)  //fotograma 6
+    };
+    //recortar el comprador 
+    public static Sprite[] compradorCaminando = new Sprite[] {
+        new Sprite(32, 0, 0, HojaSprites.hojaComprador), 
+        new Sprite(32, 1, 0, HojaSprites.hojaComprador), 
+        new Sprite(32, 2, 0, HojaSprites.hojaComprador), 
+        new Sprite(32, 3, 0, HojaSprites.hojaComprador), 
+        new Sprite(32, 4, 0, HojaSprites.hojaComprador), 
+        new Sprite(32, 5, 0, HojaSprites.hojaComprador)  
+    };
+    
     public Sprite(final int lado, final int columna, final int fila, final HojaSprites hoja){
         this.lado = lado;
         this.pixeles = new int[lado * lado];

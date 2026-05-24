@@ -54,10 +54,7 @@ public class Vendedor extends Persona {
     }
     
     public void atenderCliente(){
-        
-        
-        
-        
+
     }
     
 }

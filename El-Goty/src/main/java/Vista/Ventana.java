@@ -13,6 +13,8 @@ import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
 import javax.swing.JFrame;
+import models.Vendedor;
+import models.Comprador;
 /**
  *
  * @author USER
@@ -27,8 +29,8 @@ public class Ventana extends Canvas implements Runnable{
     private static int aps = 0;
     private static int fps = 0;
     
-    private static int x = 0; 
-    private static int y = 0;
+    //private static int x = 0; 
+    //private static int y = 0;
     
     private static JFrame ventana;
     private static Thread thread;//ayuda a manejar cosas en paralelo para ello se impementa el runnable
@@ -37,6 +39,9 @@ public class Ventana extends Canvas implements Runnable{
     
     private static BufferedImage imagen = new BufferedImage(ANCHO,ALTO,BufferedImage.TYPE_INT_RGB);
     private static int[] pixeles = ((DataBufferInt) imagen.getRaster().getDataBuffer()).getData();
+    
+    private static Vendedor jugador;
+    private static Comprador cliente;
     
     public Ventana(){
         setPreferredSize(new Dimension(ANCHO,ALTO));
@@ -51,6 +56,15 @@ public class Ventana extends Canvas implements Runnable{
         ventana.pack();
         ventana.setLocationRelativeTo(null);
         ventana.setVisible(true);
+        // Crear el primer jugador (vendedor)
+        jugador = new Vendedor("Ninguno", 0, "Novato", 12345, "Pedro", 3001234);
+        jugador.setX(100);
+        jugador.setY(100);
+        
+        //crear comprador
+        cliente = new Comprador("nuevo","paciente",123456,"buho",30012345);
+        cliente.setX(200);
+        cliente.setY(200);
     }
     public synchronized void iniciar(){
         enFuncionamiento = true;
@@ -66,21 +80,33 @@ public class Ventana extends Canvas implements Runnable{
             e.printStackTrace();
         }
     }
+    // usamos el metodo moverse heredado de persona
     private void actualizar(){
         Teclado.actualizar();
         
+        int velocidad = 1;
+        int dx=0;
+        int dy=0;
+        
         if(Teclado.arriba){
-            y++;
+            jugador.Moverse(0, -velocidad); // Resta en Y para subir
         }
         if(Teclado.abajo){
-            y--;
+            jugador.Moverse(0, velocidad);  // Suma en Y para bajar
         }
         if(Teclado.izquierda){
-            x++;
+            jugador.Moverse(-velocidad, 0); // Resta en X para ir a la izquierda    
         }
         if(Teclado.derecha){
-            x--;
+            jugador.Moverse(velocidad, 0);  // Suma en X para ir a la derecha
         }
+        
+        jugador.Moverse(dx,dy);
+        jugador.actualizarAnimacion();
+        
+        cliente.actualizarIA();
+        cliente.actualizarAnimacion();
+        
         aps++;
     }
     private void mostrar(){
@@ -90,7 +116,26 @@ public class Ventana extends Canvas implements Runnable{
             return;
         }
         pantalla.limpiar();
-        pantalla.mostrar(x,y,Sprite.asfalto);
+        pantalla.mostrar(0, 0, Sprite.asfalto); //dibujar primero el asfalto
+        
+        //elejimos el fotograma 0 por defecto cuando esta quieto
+        Sprite spriteActual = Sprite.monstruoCaminando[0];
+        
+        if (jugador.esEnMovimiento() || jugador.getContadorAnimacion() > 0) {
+            // Dividimos el contador entre 6 para cambiar de cuadro cada 6 fotogramas del juego
+            int indiceFotograma = jugador.getContadorAnimacion() / 6;
+        
+            // Control de seguridad para no desbordar el arreglo de 6 elementos
+            if (indiceFotograma > 5) {
+                indiceFotograma = 5;
+            }
+        spriteActual = Sprite.monstruoCaminando[indiceFotograma];
+        }
+        
+        Sprite spriteCliente = Sprite.compradorCaminando[cliente.getContadorAnimacion() / 6];
+        
+        pantalla.mostrar(jugador.getX(), jugador.getY(), spriteActual);//  mostramos el jugador
+        pantalla.mostrar(cliente.getX(), cliente.getY(), spriteCliente); // mostramos el cliente
         
         System.arraycopy(pantalla.pixeles,0,pixeles,0,pixeles.length);
         /*
@@ -117,7 +162,7 @@ public class Ventana extends Canvas implements Runnable{
         
         requestFocus();
         
-      while(enFuncionamiento = true){//si enFuncionamiento es falso, el juego se para
+      while(enFuncionamiento ){//si enFuncionamiento es falso, el juego se para
           final long inicioBucle = System.nanoTime();
           tiempoTranscurrido = inicioBucle - referenciaActualizacion;
           referenciaActualizacion = inicioBucle;
