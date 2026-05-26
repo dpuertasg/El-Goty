@@ -55,7 +55,13 @@ public class Pantalla {
                 
                 // Dibujamos de forma segura comprobando que no nos salgamos del array
                 if (pixelPantalla >= 0 && pixelPantalla < pixeles.length) {
-                    pixeles[pixelPantalla] = sprite.pixeles[pixelSprite];
+                    // ACTUALIZO PARA QUE HAYA TRANSPARENCIA EN LOS PERSONAJES
+                    int colorPixel = sprite.pixeles[pixelSprite];
+                    
+                    //SI EL PIXEL ES NEGRO NO SE PINTA
+                    if(colorPixel != 0){
+                        pixeles[pixelPantalla] = colorPixel;
+                    }
                 }
             }
         }

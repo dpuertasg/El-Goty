@@ -87,7 +87,23 @@ public class Comprador extends Persona{
         int velocidad = 1;
         int dx = direccionX * velocidad;
         int dy = direccionY * velocidad;
+        
+        //para calcular que el npc comprador no se salga del borde del mapa
+        int proximaX = this.getX() + dx;//posicion futura de x
+        int proximaY = this.getY() + dy;//posicion futura de y
 
+        //si se sale por el borde izquierdo (0) o por el derecho (800 de ancho - 32 del personaje = 768)
+        if(proximaX <= 0 || proximaX >= 768){ //los limites de la ventana
+            dx = 0; //detenemos el movimiento
+            tiempoCaminando = 0;//obligamos a pensar una nueva ruta
+        }
+        
+        //lo mismo si se sale por arriba (0) o por abajo (600 de alto - 32 = 568)
+        if(proximaY <= 0 || proximaY > 568){
+            dy = 0;
+            tiempoCaminando = 0;
+        }
+        
         // Ejecuta el método Moverse que heredó de Persona
         this.Moverse(dx, dy); 
     }
