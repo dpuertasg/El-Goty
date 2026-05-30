@@ -107,5 +107,17 @@ public class Comprador extends Persona{
         // Ejecuta el método Moverse que heredó de Persona
         this.Moverse(dx, dy); 
     }
+    
+    public String convertirAJson() {
+        return "{\n" +
+           "  \"cedula\": " + this.getCedula() + ",\n" +
+           "  \"nombre\": \"" + this.getNombre() + "\",\n" +
+           "  \"telefono\": " + this.getTelefono() + ",\n" +
+           "  \"tipoCliente\": \"" + this.getTipoCliente() + "\",\n" +
+           "  \"paciencia\": \"" + this.getPaciencia() + "\",\n" +
+           "  \"posicionX\": " + this.getX() + ",\n" +
+           "  \"posicionY\": " + this.getY() + "\n" +
+           "}";
+    }
    
 }
