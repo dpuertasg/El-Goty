@@ -18,7 +18,7 @@ public class HojaSprites {
         
     public static HojaSprites tienda = new HojaSprites("Recursos/Texturas/tienda.png", 1448, 1086);
     public static HojaSprites hojaComprador = new HojaSprites("Recursos/Texturas/Owlet_Monster_Walk_6.png", 192, 32);
-    public static HojaSprites hojaMonstruo = new HojaSprites("Recursos/Texturas/Pink_Monster_Walk_6.png", 202, 32);
+    public static HojaSprites hojaMonstruo = new HojaSprites("Recursos/Texturas/Pink_Monster_Walk_6.png", 192, 32);
     
     public HojaSprites(final String ruta, final int ancho, final int alto){
         this.ancho = ancho;
