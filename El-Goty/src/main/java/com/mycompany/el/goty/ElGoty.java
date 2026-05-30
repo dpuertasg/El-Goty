@@ -11,6 +11,9 @@ import Vista.Ventana;
 public class ElGoty {
 
     public static void main(String[] args) {
+        
+      
+        
       Ventana juego = new Ventana();
       juego.iniciar();
     }

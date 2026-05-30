@@ -15,7 +15,7 @@ public class Sprite {
     public int[] pixeles;
     private final HojaSprites hoja;
     
-    public static Sprite asfalto = new Sprite(32, 0, 0, HojaSprites.tienda);
+    public static Sprite asfalto = new Sprite(1448, 0, 0, HojaSprites.tienda);
     
     //se recorta el png de la animacion y se guardan las partes cortadas en un array (cada parte de 32 por 32);
     public static Sprite[] monstruoCaminando = new Sprite[] {

@@ -21,8 +21,8 @@ import models.Comprador;
  */
 public class Ventana extends Canvas implements Runnable{
     private static final long serialVersionUID = 1L;
-    private static final int ANCHO = 800;
-    private static final int ALTO = 600;
+    private static final int ANCHO = 1448;
+    private static final int ALTO = 1086;
     private static volatile boolean enFuncionamiento = false;//definir si el juego esta corriendo o no
     private static final String NOMBRE = "theStore";
     
