@@ -1,0 +1,9 @@
+{
+  "cedula": 123456,
+  "nombre": "buho",
+  "telefono": 30012345,
+  "tipoCliente": "nuevo",
+  "paciencia": "paciente",
+  "posicionX": 268,
+  "posicionY": 19
+}

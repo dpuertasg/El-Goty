@@ -4,6 +4,7 @@
  */
 package Vista;
 
+import static Controlador.GestionarArchivo.guardarJson;
 import Controlador.teclado;
 import java.awt.Canvas;
 import java.awt.BorderLayout;
@@ -106,6 +107,20 @@ public class Ventana extends Canvas implements Runnable{
         
         cliente.actualizarIA();
         cliente.actualizarAnimacion();
+        
+        if (Teclado.guardar) {
+            // Generamos el texto JSON con los datos del comprador en este instante
+            String datosComprador = cliente.convertirAJson();
+            
+            // Definimos la ruta y el nombre del archivo en la raíz de tu proyecto
+            String ruta = "comprador_guardado.json";
+            
+            // Invocamos al Gestor de Archivos para que lo congele en el disco duro
+            guardarJson(ruta, datosComprador);
+            
+            // Apagamos la tecla temporalmente para que no guarde repetidamente en bucle
+            Teclado.guardar = false; 
+        }
         
         aps++;
     }
