@@ -22,8 +22,8 @@ import models.Comprador;
  */
 public class Ventana extends Canvas implements Runnable{
     private static final long serialVersionUID = 1L;
-    private static final int ANCHO = 1448;
-    private static final int ALTO = 1086;
+    private static final int ANCHO = 1448, ANCHO_MIN=800;
+    private static final int ALTO = 1086, ALTO_MIN=600;
     private static volatile boolean enFuncionamiento = false;//definir si el juego esta corriendo o no
     private static final String NOMBRE = "theStore";
     
@@ -51,10 +51,11 @@ public class Ventana extends Canvas implements Runnable{
         addKeyListener(Teclado);
         ventana = new JFrame(NOMBRE);
         ventana.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        ventana.setResizable(false);
+        ventana.setMinimumSize(new Dimension(ANCHO_MIN, ALTO_MIN));
         ventana.setLayout(new BorderLayout());
         ventana.add(this,BorderLayout.CENTER);
         ventana.pack();
+        ventana.setExtendedState(JFrame.MAXIMIZED_BOTH);
         ventana.setLocationRelativeTo(null);
         ventana.setVisible(true);
         // Crear el primer jugador (vendedor)
@@ -85,7 +86,7 @@ public class Ventana extends Canvas implements Runnable{
     private void actualizar(){
         Teclado.actualizar();
         
-        int velocidad = 1;
+        int velocidad = 3;
         int dx=0;
         int dy=0;
         
@@ -131,7 +132,8 @@ public class Ventana extends Canvas implements Runnable{
             return;
         }
         pantalla.limpiar();
-        pantalla.mostrar(0, 0, Sprite.asfalto); //dibujar primero el asfalto
+        //dibujar primero el asfalto
+        pantalla.mostrar(0, 0, Sprite.asfalto);
         
         //elejimos el fotograma 0 por defecto cuando esta quieto
         Sprite spriteActual = Sprite.monstruoCaminando[0];
@@ -149,8 +151,8 @@ public class Ventana extends Canvas implements Runnable{
         
         Sprite spriteCliente = Sprite.compradorCaminando[cliente.getContadorAnimacion() / 6];
         
-        pantalla.mostrar(jugador.getX(), jugador.getY(), spriteActual);//  mostramos el jugador
-        pantalla.mostrar(cliente.getX(), cliente.getY(), spriteCliente); // mostramos el cliente
+        pantalla.mostrarPersonajes(jugador.getX(), jugador.getY(), spriteActual);//  mostramos el jugador
+        pantalla.mostrarPersonajes(cliente.getX(), cliente.getY(), spriteCliente); // mostramos el cliente
         
         System.arraycopy(pantalla.pixeles,0,pixeles,0,pixeles.length);
         /*

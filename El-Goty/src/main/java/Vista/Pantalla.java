@@ -30,38 +30,59 @@ public class Pantalla {
             pixeles[i] = 0; 
         }
     }
-   public void mostrar(final int compensacionX, final int compensacionY, Sprite sprite){
+    //separar como se muestra el asfalto y los personajes
+    //lo uso para mostrar el asfalto aparte y no se modifique su tamaño original
+    public void mostrar(final int compensacionX, final int compensacionY, Sprite sprite){
+        mostrarEscalado(compensacionX, compensacionY, sprite, 1);
+    }
+    
+    //con este paso la escala de 3 para que los personajes sean mas grandes 
+    public void mostrarPersonajes(final int compensacionX, final int compensacionY, Sprite sprite){
+        mostrarEscalado(compensacionX, compensacionY, sprite, 4); 
+    }
+    
+    //MÉTODO MAESTRO
+    //metodo mostrar modificado para que pueda escalar los personajes y hacerlos mas grandes
+    //este tambien imprime el asfalto pero con escala 1, osea, el tamaño original
+    private void mostrarEscalado(final int compensacionX, final int compensacionY, Sprite sprite, final int escala) {
+        //se lee el lado del sprite y
         for(int y = 0; y < sprite.getLado(); y++){
-            int posicionY = y + compensacionY;
             
-            // Si el píxel se sale por arriba o por abajo de la pantalla, no lo dibujamos
-            if(posicionY < 0 || posicionY >= alto){
-                continue;
-            }
-            
-            for(int x = 0; x < sprite.getLado(); x++){
-                int posicionX = x + compensacionX;
+            //este es el bucle que escala el pixel haciendo que se imprima varias veces el mismo
+            //dependiendo de la escala la seccionY va de 0 hasta la escala, por ejemplo de 0 a 2
+            for(int seccionY = 0; seccionY < escala; seccionY++) {
+                //como la escala es 3 el bucle se repite 3 veces imprimiendo el mismo pixel tres veces
+                int posicionY = (y * escala) + seccionY + compensacionY;
                 
-                // Si el píxel se sale por la izquierda o derecha de la pantalla, no lo dibujamos
-                if(posicionX < 0 || posicionX >= ancho){
+                //si sale de la pantalla no imprime
+                if(posicionY < 0 || posicionY >= alto){
                     continue;
                 }
-                
-                // CORRECCIÓN FÓRMULA DE PANTALLA: x + y * ancho
-                int pixelPantalla = posicionX + (posicionY * ancho);
-                
-                // CORRECCIÓN FÓRMULA DE SPRITE: x + y * lado
-                int pixelSprite = x + (y * sprite.getLado());
-                
-                // Dibujamos de forma segura comprobando que no nos salgamos del array
-                if (pixelPantalla >= 0 && pixelPantalla < pixeles.length) {
-                    // ACTUALIZO PARA QUE HAYA TRANSPARENCIA EN LOS PERSONAJES
-                    int colorPixel = sprite.pixeles[pixelSprite];
+                //se lee el lado del sprite x
+                for(int x = 0; x < sprite.getLado(); x++){
                     
-                    //SI EL PIXEL ES NEGRO NO SE PINTA
-                    if(colorPixel != 0){
-                        pixeles[pixelPantalla] = colorPixel;
+                    //esta el bucle que escala en x
+                    for(int seccionX = 0; seccionX < escala; seccionX++) {
+                        
+                        //imprimimos tres veces el mismo pixel
+                        int posicionX = (x * escala) + seccionX + compensacionX;
+                        
+                        //si sale de la pantalla no imprime
+                        if(posicionX < 0 || posicionX >= ancho){
+                            continue;
+                        }
+                        
+                        int pixelPantalla = posicionX + (posicionY * ancho); //indice del arreglo donde se va a insertar el color
+                        int pixelSprite = x + (y * sprite.getLado());//parte de donde se saca el color de la imagen original
+                        
+                        if (pixelPantalla >= 0 && pixelPantalla < pixeles.length) {//Comprueba que el índice de la pantalla sea válido en la memoria
+                            int colorPixel = sprite.pixeles[pixelSprite];//Extrae el color original del sprite y lo guarda en colorPixel
+                            if(colorPixel != 0){// si el color es diferente de cero, entoces si se imprime
+                                pixeles[pixelPantalla] = colorPixel;
+                            }
+                        }
                     }
+                    
                 }
             }
         }

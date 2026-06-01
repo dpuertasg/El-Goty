@@ -84,7 +84,7 @@ public class Comprador extends Persona{
                 tiempoCaminando = aleatorio.nextInt(60) + 60; //tiempo aleatorio antes de tomar una decicion (60 ciclos es 1 segundo) 
             }
     
-        int velocidad = 1;
+        int velocidad = 2;
         int dx = direccionX * velocidad;
         int dy = direccionY * velocidad;
         
