@@ -16,6 +16,7 @@ import java.awt.image.DataBufferInt;
 import javax.swing.JFrame;
 import models.Vendedor;
 import models.Comprador;
+import models.Obstaculo;
 /**
  *
  * @author USER
@@ -40,9 +41,26 @@ public class Ventana extends Canvas implements Runnable{
     
     private static BufferedImage imagen = new BufferedImage(ANCHO,ALTO,BufferedImage.TYPE_INT_RGB);
     private static int[] pixeles = ((DataBufferInt) imagen.getRaster().getDataBuffer()).getData();
+    private static boolean mostrarBotonInteraccion = false; //para interactuar con los clientes
     
     private static Vendedor jugador;
     private static Comprador cliente;
+    private static Comprador cliente2;
+    
+    private static Obstaculo[] muebles = {
+        //estas son las posiciones de x , y ademas de el ancho y alto de cada mueble
+        new Obstaculo(610, 20, 90, 130),       //entrada
+        new Obstaculo(80, 70, 445, 135),   //estanteria izquierda sup 1
+        new Obstaculo(750, 70, 595, 140),   //estanteria derecha sup 1
+        new Obstaculo(80, 350, 50, 180),    //estanteria centro izquierda
+        new Obstaculo(497, 494, 53, 33),    //carrito 1
+        new Obstaculo(614, 436, 223, 91),  //estanteria central 1
+        new Obstaculo(611, 695, 226, 87),   //estanteria 2 bajo la 1
+        new Obstaculo(965, 660, 37, 20),   //carrito 2
+        new Obstaculo(1070, 437, 223, 91),   //estanteria 3 a la derecha
+        new Obstaculo(1070, 695, 223, 91),    //estanteria 4 a la derecha abajo
+        new Obstaculo(225 ,690, 45,147)   //caja
+    };
     
     public Ventana(){
         setPreferredSize(new Dimension(ANCHO,ALTO));
@@ -60,13 +78,17 @@ public class Ventana extends Canvas implements Runnable{
         ventana.setVisible(true);
         // Crear el primer jugador (vendedor)
         jugador = new Vendedor("Ninguno", 0, "Novato", 12345, "Pedro", 3001234);
-        jugador.setX(100);
-        jugador.setY(100);
+        jugador.setX(300);
+        jugador.setY(500);
         
         //crear comprador
         cliente = new Comprador("nuevo","paciente",123456,"buho",30012345);
-        cliente.setX(200);
+        cliente.setX(600);
         cliente.setY(200);
+        //crear comprador2
+        cliente2 = new Comprador("nuevo","impaciente",1234567,"azul",30213527);
+        cliente2.setX(600);
+        cliente2.setY(200);
     }
     public synchronized void iniciar(){
         enFuncionamiento = true;
@@ -88,26 +110,54 @@ public class Ventana extends Canvas implements Runnable{
         
         int velocidad = 3;
         int dx=0;
-        int dy=0;
+        int dy=0;     
         
         if(Teclado.arriba){
-            jugador.Moverse(0, -velocidad); // Resta en Y para subir
+            dy = -velocidad; // Intencion de subir
         }
         if(Teclado.abajo){
-            jugador.Moverse(0, velocidad);  // Suma en Y para bajar
+            dy = velocidad;  // Intencion de bajar
         }
         if(Teclado.izquierda){
-            jugador.Moverse(-velocidad, 0); // Resta en X para ir a la izquierda    
+            dx = -velocidad; // Intencion de ir a la izquierda    
         }
         if(Teclado.derecha){
-            jugador.Moverse(velocidad, 0);  // Suma en X para ir a la derecha
+            dx = velocidad;  // Intencion de ir a la derecha
         }
+        //calculamos la posicion futura en base al teclado (dx, dy)
+        int proximaX = jugador.getX() + dx;
+        int proximaY = jugador.getY() + dy;
+        
+        // para verificar si el paso que va a dar colisionara con otro personaje
+        if (jugador.colisionaCon(cliente) || jugador.colisionaCon(cliente2) ) {
+            mostrarBotonInteraccion = true;
+            
+            //acciones futuras aqui dentro
+            
+            if(Teclado.interactuar){
+                Teclado.interactuar = false; //apagamos la tecla para evitar doble pulsación
+            }
+        }else{
+                mostrarBotonInteraccion = false;
+        }
+        //verificar colision con un objeto
+        if (jugador.colisionaConMuebles(proximaX, proximaY, muebles)) {
+            //si el paso que va a dar choca con un mueble, cancelamos el movimiento
+            dx = 0;
+            dy = 0;
+        }
+        
+        //ajustamos los limites basados en las dimensiones de la tienda
+        if (proximaX < 80 || proximaX > 1275) { dx = 0; }
+        if (proximaY < 70 || proximaY > 870) { dy = 0; }
         
         jugador.Moverse(dx,dy);
         jugador.actualizarAnimacion();
         
-        cliente.actualizarIA();
+        cliente.actualizarIA(muebles);
         cliente.actualizarAnimacion();
+        cliente2.actualizarIA(muebles);
+        cliente2.actualizarAnimacion();
         
         if (Teclado.guardar) {
             // Generamos el texto JSON con los datos del comprador en este instante
@@ -150,9 +200,11 @@ public class Ventana extends Canvas implements Runnable{
         }
         
         Sprite spriteCliente = Sprite.compradorCaminando[cliente.getContadorAnimacion() / 6];
+        Sprite spriteCliente2 = Sprite.compradorCaminando2[cliente2.getContadorAnimacion() / 6];
         
         pantalla.mostrarPersonajes(jugador.getX(), jugador.getY(), spriteActual);//  mostramos el jugador
         pantalla.mostrarPersonajes(cliente.getX(), cliente.getY(), spriteCliente); // mostramos el cliente
+        pantalla.mostrarPersonajes(cliente2.getX(), cliente2.getY(), spriteCliente2); // mostramos el cliente
         
         System.arraycopy(pantalla.pixeles,0,pixeles,0,pixeles.length);
         /*
@@ -162,6 +214,49 @@ public class Ventana extends Canvas implements Runnable{
         Graphics g = estrategia.getDrawGraphics();
         
         g.drawImage(imagen, 0, 0, getWidth(),getHeight(),null);
+        
+        //boton interactuar
+        if (mostrarBotonInteraccion) {
+            // Calculamos el centro de la pantalla abajo de forma dinamica usando las dimensiones
+            int anchoBoton = 300;
+            int altoBoton = 50;
+            int botonX = (getWidth() / 2) - (anchoBoton / 2); //centrado horizontal
+            int botonY = getHeight() - 100;                  //abajo en la pantalla
+
+            //dibujamos el fondo del boton (un rectangulo negro con borde blanco)
+            g.setColor(java.awt.Color.BLACK);
+            g.fillRect(botonX, botonY, anchoBoton, altoBoton);
+            
+            g.setColor(java.awt.Color.WHITE);
+            g.drawRect(botonX, botonY, anchoBoton, altoBoton);
+
+            //dibujamos el texto centrado dentro del boton
+            g.setFont(new java.awt.Font("Arial", java.awt.Font.BOLD, 16));
+            g.drawString("PRESIONA 'E' PARA HABLAR", botonX + 35, botonY + 32);
+        }
+        //TEMPORAL PARA SABER LA POSICION DEL JUGADOR
+        g.setColor(new java.awt.Color(0, 0, 0, 180)); //el cuarto parametro da opacidad
+        g.fillRect(15, 15, 240, 85);
+        
+        //añadimos un borde blanco
+        g.setColor(java.awt.Color.WHITE);
+        g.drawRect(15, 15, 240, 85);
+        
+        //configuramos la fuente del texto
+        g.setFont(new java.awt.Font("Consolas", java.awt.Font.BOLD, 14));
+        g.setColor(java.awt.Color.GREEN);
+        
+        //calculamos las celdas basandonos en el tamaño de 96 pixeles
+        int celdaX = jugador.getX() / 96;
+        int celdaY = jugador.getY() / 96;
+        
+        //pintamos las cadenas de texto con las posiciones del jugador en tiempo real
+        g.drawString("DEV MODE - POSICION", 25, 35);
+        g.setColor(java.awt.Color.WHITE);
+        g.drawString("Pixeles : X: " + jugador.getX() + " | Y: " + jugador.getY(), 25, 55);
+        g.drawString("Matriz  : Col: " + celdaX + " | Fila: " + celdaY, 25, 75);
+        //---------------------------------------------------------------------------------------
+        
         g.dispose();
         estrategia.show();
         fps++;

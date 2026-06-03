@@ -73,7 +73,8 @@ public class Comprador extends Persona{
         
     }
     
-    public void actualizarIA() {
+    //actualizacion para colisiones con objetos (listaMuebles)
+    public void actualizarIA(Obstaculo[] listaMuebles) {
         tiempoCaminando--;
 
             if (tiempoCaminando <= 0) {
@@ -92,14 +93,19 @@ public class Comprador extends Persona{
         int proximaX = this.getX() + dx;//posicion futura de x
         int proximaY = this.getY() + dy;//posicion futura de y
 
-        //si se sale por el borde izquierdo (0) o por el derecho (800 de ancho - 32 del personaje = 768)
-        if(proximaX <= 0 || proximaX >= 768){ //los limites de la ventana
+        //detectamos colision
+        if(this.colisionaConMuebles(proximaX, proximaY, listaMuebles)){
+            dy = 0;
+            dx = 0;
+        }
+        
+        //si se sale por el borde izquierdo (80) o por el derecho (1275)
+        if(proximaX <= 80 || proximaX >= 1275){ //los limites de la tienda
             dx = 0; //detenemos el movimiento
             tiempoCaminando = 0;//obligamos a pensar una nueva ruta
         }
-        
-        //lo mismo si se sale por arriba (0) o por abajo (600 de alto - 32 = 568)
-        if(proximaY <= 0 || proximaY > 568){
+        //lo mismo si se sale por arriba (70) o por abajo (870)
+        if(proximaY <= 70 || proximaY > 870){
             dy = 0;
             tiempoCaminando = 0;
         }

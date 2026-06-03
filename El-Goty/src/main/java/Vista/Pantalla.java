@@ -38,7 +38,7 @@ public class Pantalla {
     
     //con este paso la escala de 3 para que los personajes sean mas grandes 
     public void mostrarPersonajes(final int compensacionX, final int compensacionY, Sprite sprite){
-        mostrarEscalado(compensacionX, compensacionY, sprite, 4); 
+        mostrarEscalado(compensacionX, compensacionY, sprite, 3); 
     }
     
     //MÉTODO MAESTRO

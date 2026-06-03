@@ -14,10 +14,10 @@ public class HojaSprites {
     private final int ancho;
     public final int[] pixeles;
     private BufferedImage fondo;
-    
-        
+         
     public static HojaSprites tienda = new HojaSprites("Recursos/Texturas/tienda.png", 1448, 1086);
     public static HojaSprites hojaComprador = new HojaSprites("Recursos/Texturas/Owlet_Monster_Walk_6.png", 192, 32);
+    public static HojaSprites hojaComprador2 = new HojaSprites("Recursos/Texturas/Dude_Monster_Walk_6.png", 192, 32);
     public static HojaSprites hojaMonstruo = new HojaSprites("Recursos/Texturas/Pink_Monster_Walk_6.png", 192, 32);
     
     public HojaSprites(final String ruta, final int ancho, final int alto){

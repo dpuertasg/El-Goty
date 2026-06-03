@@ -79,6 +79,28 @@ public class Persona {
         // Reseteamos para el próximo tick
         enMovimiento = false;
     }
+    
+    //detectar si hay colision entredos personas
+    public boolean colisionaCon(Persona otraPersona) {
+        //definimos el tamaño real en pantalla de los personajes (escala 3 * 32 = 96)
+        int tamaño = 96; 
+        
+        //rectangulo del personaje actual (A)
+        int xA = this.x;
+        int yA = this.y;
+        
+        //rectangulo de la otra persona (B)
+        int xB = otraPersona.getX();
+        int yB = otraPersona.getY();
+        
+        //comprobamos si los rectangulos se superponen en los ejes X e Y
+        boolean colisionEnX = (xA < xB + tamaño) && (xA + tamaño > xB);
+        boolean colisionEnY = (yA < yB + tamaño) && (yA + tamaño > yB);
+        
+        //si hay superposicion en ambos ejes, hay colision
+        return colisionEnX && colisionEnY;
+    }
+    
     public int getContadorAnimacion() {
         return contadorAnimacion;
     }
@@ -101,6 +123,25 @@ public class Persona {
 
     public void setY(int y) {
         this.y = y;
+    }
+    
+    public boolean colisionaConMuebles(int proximaX, int proximaY, Obstaculo[] listaMuebles) {
+        int tamañoPersonaje = 96; //tamaño en pantalla por la escala 3
+        
+        for (Obstaculo mueble : listaMuebles) {//el ciclo recorre todos los objetos y uno por uno comprueba si hay colision
+        
+            //si colisoina en x
+            boolean colisionX = (proximaX < mueble.getX() + mueble.getAncho()) && 
+                            (proximaX + tamañoPersonaje > mueble.getX());
+            //si colisiona en y                    
+            boolean colisionY = (proximaY < mueble.getY() + mueble.getAlto()) && 
+                            (proximaY + tamañoPersonaje > mueble.getY());
+        
+            if (colisionX && colisionY) {
+                return true; // choco con este mueble en particular
+            }
+        }
+        return false; // el camino esta limpio
     }
      
 }

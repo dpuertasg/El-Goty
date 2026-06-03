@@ -22,6 +22,8 @@ public class teclado implements KeyListener{
     public boolean derecha;
     //tecla para guardar partida
     public boolean guardar;
+    //tecla para interactuar
+    public boolean interactuar;
     
     public void actualizar(){
         arriba = teclas[KeyEvent.VK_W];
@@ -29,6 +31,7 @@ public class teclado implements KeyListener{
         izquierda = teclas[KeyEvent.VK_A];
         derecha = teclas[KeyEvent.VK_D];
         guardar = teclas[KeyEvent.VK_G];
+        interactuar = teclas[KeyEvent.VK_E];
     }
     
     @Override
