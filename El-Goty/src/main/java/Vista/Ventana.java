@@ -42,6 +42,7 @@ public class Ventana extends Canvas implements Runnable{
     private static BufferedImage imagen = new BufferedImage(ANCHO,ALTO,BufferedImage.TYPE_INT_RGB);
     private static int[] pixeles = ((DataBufferInt) imagen.getRaster().getDataBuffer()).getData();
     private static boolean mostrarBotonInteraccion = false; //para interactuar con los clientes
+    private static boolean mostrarBotonCaja = false;// para interactuar con la caja
     
     private static Vendedor jugador;
     private static Comprador cliente;
@@ -140,6 +141,30 @@ public class Ventana extends Canvas implements Runnable{
         }else{
                 mostrarBotonInteraccion = false;
         }
+        
+        Obstaculo cajaRegistradora = muebles[10]; //extraer el objeto de la caja para comprobacion de que se este colisionando
+        int tamañoJugador = 96;
+        
+        //con esto sabremos si colisiona con caja en x o y
+        boolean cercaDeCajaX = (jugador.getX() < cajaRegistradora.getX() + cajaRegistradora.getAncho() +10) && 
+                               (jugador.getX() + tamañoJugador +10 > cajaRegistradora.getX());
+                               
+        boolean cercaDeCajaY = (jugador.getY() < cajaRegistradora.getY() + cajaRegistradora.getAlto() +10) && 
+                               (jugador.getY() + tamañoJugador +10 > cajaRegistradora.getY());
+        
+        //comprobamos
+        if(cercaDeCajaX && cercaDeCajaY){
+            mostrarBotonCaja = true;
+            
+            if(Teclado.abrirCaja){
+                //proximo menu de tienda
+                
+                Teclado.abrirCaja = false;
+            }
+        }else{
+            mostrarBotonCaja = false;
+        }
+        
         //verificar colision con un objeto
         if (jugador.colisionaConMuebles(proximaX, proximaY, muebles)) {
             //si el paso que va a dar choca con un mueble, cancelamos el movimiento
@@ -234,6 +259,23 @@ public class Ventana extends Canvas implements Runnable{
             g.setFont(new java.awt.Font("Arial", java.awt.Font.BOLD, 16));
             g.drawString("PRESIONA 'E' PARA HABLAR", botonX + 35, botonY + 32);
         }
+        
+        if(mostrarBotonCaja){
+            int altoBoton = 50;
+            int anchoBoton = 320;
+            //posicion del boton            
+            int botonX = (getWidth()/2) - (anchoBoton / 2);//ancho de la ventana y lo divide entre 2 para centrarlo
+            int botonY = getHeight() - 100;//determina a la altura de la pantalla (-100 para que no quede pegado abajo)
+            
+            g.setColor(new java.awt.Color(20, 40, 80)); //le doy color nuevo
+            g.fillRect(botonX, botonY, anchoBoton, altoBoton);// se pinta el fondo del boton
+            g.setColor(java.awt.Color.CYAN); //cambio de color
+            g.drawRect(botonX, botonY, anchoBoton, altoBoton); //dibujamos el contorno con ese color
+            g.setFont(new java.awt.Font("Arial", java.awt.Font.BOLD, 15)); //tipografia 
+            g.setColor(java.awt.Color.WHITE);//otro cambio de color xd
+            g.drawString("PRESIONA 'F' PARA ABRIR LA TIENDA", botonX + 15, botonY + 31); //escribimos el contenido en blanco
+        }
+        
         //TEMPORAL PARA SABER LA POSICION DEL JUGADOR
         g.setColor(new java.awt.Color(0, 0, 0, 180)); //el cuarto parametro da opacidad
         g.fillRect(15, 15, 240, 85);
