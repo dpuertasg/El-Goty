@@ -228,8 +228,13 @@ public class Ventana extends Canvas implements Runnable{
         Sprite spriteCliente2 = Sprite.compradorCaminando2[cliente2.getContadorAnimacion() / 6];
         
         pantalla.mostrarPersonajes(jugador.getX(), jugador.getY(), spriteActual);//  mostramos el jugador
-        pantalla.mostrarPersonajes(cliente.getX(), cliente.getY(), spriteCliente); // mostramos el cliente
-        pantalla.mostrarPersonajes(cliente2.getX(), cliente2.getY(), spriteCliente2); // mostramos el cliente
+        if(cliente.isVisible()){
+            pantalla.mostrarPersonajes(cliente.getX(),cliente.getY(),spriteCliente);
+        }
+
+        if(cliente2.isVisible()){
+            pantalla.mostrarPersonajes(cliente2.getX(),cliente2.getY(),spriteCliente2);
+        }
         
         System.arraycopy(pantalla.pixeles,0,pixeles,0,pixeles.length);
         /*
