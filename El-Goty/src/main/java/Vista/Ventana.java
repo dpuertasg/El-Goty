@@ -265,22 +265,53 @@ public class Ventana extends Canvas implements Runnable{
         Graphics g = estrategia.getDrawGraphics();
         
         g.drawImage(imagen, 0, 0, getWidth(),getHeight(),null);
-        
-        g.setColor(java.awt.Color.WHITE);
         g.setFont(new java.awt.Font("Arial", java.awt.Font.BOLD, 14));
-    
-       // Pintar mensaje del jugador
+   
         if (jugador != null && !jugador.getMensajeFlotante().equals("")) {
-        g.drawString(jugador.getMensajeFlotante(), jugador.getX(), jugador.getY() - 15);
-        }
-       // Pintar mensaje delcliente
-        if (cliente != null && !cliente.getMensajeFlotante().equals("")) {
-        g.drawString(cliente.getMensajeFlotante(), cliente.getX(), cliente.getY() - 15);
-        }
+        String msj = jugador.getMensajeFlotante();
+        
+        int xPantalla = jugador.getX() * 3;
+        int yPantalla = jugador.getY() * 3;
+        
+        // 48 es la mitad de 96 (el tamaño real del personaje escalado en pantalla)
+        int xCentro = xPantalla + 48 - (g.getFontMetrics().stringWidth(msj) / 2);
+        int yArriba = yPantalla - 15;
+        
+        // Sombra negra
+        g.setColor(java.awt.Color.BLACK);
+        g.drawString(msj, xCentro + 1, yArriba + 1);
+        // Texto original en blanco
+        g.setColor(java.awt.Color.WHITE);
+        g.drawString(msj, xCentro, yArriba);
+    }
 
-        // Pintar mensaje del segundo cliente
-        if (cliente2 != null && !cliente2.getMensajeFlotante().equals("")) {
-        g.drawString(cliente2.getMensajeFlotante(), cliente2.getX(), cliente2.getY() - 15);
+    if (cliente != null && !cliente.getMensajeFlotante().equals("")) {
+        String msj = cliente.getMensajeFlotante();
+        
+        int xPantalla = cliente.getX() * 3;
+        int yPantalla = cliente.getY() * 3;
+        
+        int xCentro = xPantalla + 48 - (g.getFontMetrics().stringWidth(msj) / 2);
+        int yArriba = yPantalla - 15;
+        
+        g.setColor(java.awt.Color.BLACK);
+        g.drawString(msj, xCentro + 1, yArriba + 1);
+        g.setColor(java.awt.Color.WHITE);
+        g.drawString(msj, xCentro, yArriba);
+    }
+    if (cliente2 != null && !cliente2.getMensajeFlotante().equals("")) {
+        String msj = cliente2.getMensajeFlotante();
+        
+        int xPantalla = cliente2.getX() * 3;
+        int yPantalla = cliente2.getY() * 3;
+        
+        int xCentro = xPantalla + 48 - (g.getFontMetrics().stringWidth(msj) / 2);
+        int yArriba = yPantalla - 15;
+        
+        g.setColor(java.awt.Color.BLACK);
+        g.drawString(msj, xCentro + 1, yArriba + 1);
+        g.setColor(java.awt.Color.WHITE);
+        g.drawString(msj, xCentro, yArriba);
     }
         
 //boton interactuar
