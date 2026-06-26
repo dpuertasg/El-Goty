@@ -282,8 +282,8 @@ public class Ventana extends Canvas implements Runnable{
         if (jugador != null && !jugador.getMensajeFlotante().equals("")) {
         String msj = jugador.getMensajeFlotante();
         
-        int xPantalla = jugador.getX() * 3;
-        int yPantalla = jugador.getY() * 3;
+        int xPantalla = jugador.getX();
+        int yPantalla = jugador.getY();
         
         // 48 es la mitad de 96 (el tamaño real del personaje escalado en pantalla)
         int xCentro = xPantalla + 48 - (g.getFontMetrics().stringWidth(msj) / 2);
@@ -300,8 +300,8 @@ public class Ventana extends Canvas implements Runnable{
     if (cliente != null && !cliente.getMensajeFlotante().equals("")) {
         String msj = cliente.getMensajeFlotante();
         
-        int xPantalla = cliente.getX() * 3;
-        int yPantalla = cliente.getY() * 3;
+        int xPantalla = cliente.getX();
+        int yPantalla = cliente.getY();       
         
         int xCentro = xPantalla + 48 - (g.getFontMetrics().stringWidth(msj) / 2);
         int yArriba = yPantalla - 15;
@@ -314,8 +314,8 @@ public class Ventana extends Canvas implements Runnable{
     if (cliente2 != null && !cliente2.getMensajeFlotante().equals("")) {
         String msj = cliente2.getMensajeFlotante();
         
-        int xPantalla = cliente2.getX() * 3;
-        int yPantalla = cliente2.getY() * 3;
+        int xPantalla = cliente2.getX();
+        int yPantalla = cliente2.getY();
         
         int xCentro = xPantalla + 48 - (g.getFontMetrics().stringWidth(msj) / 2);
         int yArriba = yPantalla - 15;
@@ -383,14 +383,13 @@ public class Ventana extends Canvas implements Runnable{
         g.setColor(java.awt.Color.WHITE);
         g.drawString("Pixeles : X: " + jugador.getX() + " | Y: " + jugador.getY(), 25, 55);
         g.drawString("Matriz  : Col: " + celdaX + " | Fila: " + celdaY, 25, 75);
-        //---------------------------------------------------------------------------------------
+
         if (Teclado.verHistorial && jugador != null) { 
             String textoJson = Controlador.GestionarArchivo.obtenerHistorialJson();
             String[] lineas = textoJson.split("\n");
             
-            // Coordenadas basadas en la posición del jugador
-            int xCaja = (jugador.getX() * 3) - 80;
-            int yCaja = (jugador.getY() * 3) - 180;
+            int xCaja = jugador.getX() - 100;
+            int yCaja = jugador.getY() - 180;
             
             // 1. Fondo negro semitransparente
             g.setColor(new java.awt.Color(0, 0, 0, 210)); 
@@ -410,6 +409,7 @@ public class Ventana extends Canvas implements Runnable{
                 yTexto += 16;
             }
         }
+      
         g.dispose();
         estrategia.show();
         fps++;
