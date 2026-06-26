@@ -91,6 +91,14 @@ public class Ventana extends Canvas implements Runnable{
         cliente2 = new Comprador("nuevo","impaciente",1234567,"azul",30213527);
         cliente2.setX(600);
         cliente2.setY(200);
+    try {
+            java.io.FileWriter fw = new java.io.FileWriter("historial_ventas.txt", false); // false borra todo lo viejo
+            fw.write("");
+            fw.close();
+            System.out.println("🧹 Historial de ventas reiniciado con éxito.");
+        } catch (java.io.IOException e) {
+            System.err.println("Error al reiniciar el archivo: " + e.getMessage());
+        }
     }
     public synchronized void iniciar(){
         enFuncionamiento = true;
@@ -165,10 +173,11 @@ public class Ventana extends Canvas implements Runnable{
                         int distanciaY1 = Math.abs(jugador.getY() - cliente.getY());
 
                         if (distanciaX1 < 80 && distanciaY1 < 80) {
-                            jugador.setMensajeFlotante("¡Son $50, por favor!");
+                        int precio = (int)(Math.random() * 81) + 20; 
+                            jugador.setMensajeFlotante("¡Son $" + precio + ", por favor!");
                             cliente.setMensajeFlotante("¡Gracias por mi compra!");
-                            //Se guarda la venta en el archivo txt
-                            Controlador.GestionarArchivo.registrarVenta("Venta realizada: $50 - Cliente 1");
+                            // Guardamos la venta usando la variable precio
+                            Controlador.GestionarArchivo.registrarVenta("Venta realizada: $" + precio + " - Cliente 1");
                         }
                     }
 
@@ -178,11 +187,12 @@ public class Ventana extends Canvas implements Runnable{
                         int distanciaY2 = Math.abs(jugador.getY() - cliente2.getY());
 
                         if (distanciaX2 < 80 && distanciaY2 < 80) {
-                            jugador.setMensajeFlotante("¡Llévalo con descuento!");
+                            int precioPromo = (int)(Math.random() * 31) + 10;
+                            
+                            jugador.setMensajeFlotante("¡Llévalo por $" + precioPromo + "!");
                             cliente2.setMensajeFlotante("¡Qué buen servicio!");
-                            //Se guarda la venta en el archivo txt
-                            Controlador.GestionarArchivo.registrarVenta("Venta con descuento: $30 - Cliente 2");
-                        }
+                            // Guardamos la venta usando la variable precioPromo
+                            Controlador.GestionarArchivo.registrarVenta("Venta con descuento: $" + precioPromo + " - Cliente 2");}
                     }
                     
                     cajaPresionada = true;
@@ -294,7 +304,7 @@ public class Ventana extends Canvas implements Runnable{
         g.drawString(msj, xCentro + 1, yArriba + 1);
         // Texto original en blanco
         g.setColor(java.awt.Color.WHITE);
-        g.drawString(msj, xCentro, yArriba);
+        g.drawString(msj, xCentro, yArriba - 40);
     }
 
     if (cliente != null && !cliente.getMensajeFlotante().equals("")) {
@@ -309,7 +319,7 @@ public class Ventana extends Canvas implements Runnable{
         g.setColor(java.awt.Color.BLACK);
         g.drawString(msj, xCentro + 1, yArriba + 1);
         g.setColor(java.awt.Color.WHITE);
-        g.drawString(msj, xCentro, yArriba);
+        g.drawString(msj, xCentro, yArriba - 40);
     }
     if (cliente2 != null && !cliente2.getMensajeFlotante().equals("")) {
         String msj = cliente2.getMensajeFlotante();
@@ -323,7 +333,7 @@ public class Ventana extends Canvas implements Runnable{
         g.setColor(java.awt.Color.BLACK);
         g.drawString(msj, xCentro + 1, yArriba + 1);
         g.setColor(java.awt.Color.WHITE);
-        g.drawString(msj, xCentro, yArriba);
+        g.drawString(msj, xCentro, yArriba - 40);
     }
         
 //boton interactuar
