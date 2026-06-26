@@ -43,6 +43,7 @@ public class Ventana extends Canvas implements Runnable{
     private static int[] pixeles = ((DataBufferInt) imagen.getRaster().getDataBuffer()).getData();
     private static boolean mostrarBotonInteraccion = false; //para interactuar con los clientes
     private static boolean mostrarBotonCaja = false;// para interactuar con la caja
+    private boolean cajaPresionada = false;
     
     private static Vendedor jugador;
     private static Comprador cliente;
@@ -157,33 +158,44 @@ public class Ventana extends Canvas implements Runnable{
             mostrarBotonCaja = true;
             
             if(Teclado.abrirCaja){
-        if (jugador != null && cliente != null) {
-            int distanciaX1 = Math.abs(jugador.getX() - cliente.getX());
-            int distanciaY1 = Math.abs(jugador.getY() - cliente.getY());
-            
-            if (distanciaX1 < 80 && distanciaY1 < 80) {
-                jugador.setMensajeFlotante("¡Son $50, por favor!");
-                cliente.setMensajeFlotante("¡Gracias por mi compra!");
+        if (!cajaPresionada) {
+                    
+                    if (jugador != null && cliente != null) {
+                        int distanciaX1 = Math.abs(jugador.getX() - cliente.getX());
+                        int distanciaY1 = Math.abs(jugador.getY() - cliente.getY());
+
+                        if (distanciaX1 < 80 && distanciaY1 < 80) {
+                            jugador.setMensajeFlotante("¡Son $50, por favor!");
+                            cliente.setMensajeFlotante("¡Gracias por mi compra!");
+                            //Se guarda la venta en el archivo txt
+                            Controlador.GestionarArchivo.registrarVenta("Venta realizada: $50 - Cliente 1");
+                        }
+                    }
+
+                    // 2. Revisar si el cliente2 está cerca
+                    if (jugador != null && cliente2 != null) {
+                        int distanciaX2 = Math.abs(jugador.getX() - cliente2.getX());
+                        int distanciaY2 = Math.abs(jugador.getY() - cliente2.getY());
+
+                        if (distanciaX2 < 80 && distanciaY2 < 80) {
+                            jugador.setMensajeFlotante("¡Llévalo con descuento!");
+                            cliente2.setMensajeFlotante("¡Qué buen servicio!");
+                            //Se guarda la venta en el archivo txt
+                            Controlador.GestionarArchivo.registrarVenta("Venta con descuento: $30 - Cliente 2");
+                        }
+                    }
+                    
+                    cajaPresionada = true;
+                }
+                
+            } else {
+                cajaPresionada = false;
+                
+                // Al soltar la tecla F, limpiamos los mensajes de todos
+                if (jugador != null) jugador.setMensajeFlotante("");
+                if (cliente != null) cliente.setMensajeFlotante("");
+                if (cliente2 != null) cliente2.setMensajeFlotante("");   
             }
-        }
-        
-        // 2. Revisar si el "cliente2" está cerca
-        if (jugador != null && cliente2 != null) {
-            int distanciaX2 = Math.abs(jugador.getX() - cliente2.getX());
-            int distanciaY2 = Math.abs(jugador.getY() - cliente2.getY());
-            
-            if (distanciaX2 < 80 && distanciaY2 < 80) {
-                jugador.setMensajeFlotante("¡Llévalo con descuento!");
-                cliente2.setMensajeFlotante("¡Qué buen servicio!");
-            }
-        }
-        
-    } else {
-        // Al SOLTAR la tecla F, limpiamos los mensajes de todos
-        if (jugador != null) jugador.setMensajeFlotante("");
-        if (cliente != null) cliente.setMensajeFlotante("");
-        if (cliente2 != null) cliente2.setMensajeFlotante("");
-    }
      }
         
         //verificar colision con un objeto
@@ -372,7 +384,32 @@ public class Ventana extends Canvas implements Runnable{
         g.drawString("Pixeles : X: " + jugador.getX() + " | Y: " + jugador.getY(), 25, 55);
         g.drawString("Matriz  : Col: " + celdaX + " | Fila: " + celdaY, 25, 75);
         //---------------------------------------------------------------------------------------
-        
+        if (Teclado.verHistorial && jugador != null) { 
+            String textoJson = Controlador.GestionarArchivo.obtenerHistorialJson();
+            String[] lineas = textoJson.split("\n");
+            
+            // Coordenadas basadas en la posición del jugador
+            int xCaja = (jugador.getX() * 3) - 80;
+            int yCaja = (jugador.getY() * 3) - 180;
+            
+            // 1. Fondo negro semitransparente
+            g.setColor(new java.awt.Color(0, 0, 0, 210)); 
+            g.fillRect(xCaja, yCaja, 340, (lineas.length * 16) + 20);
+            
+            // 2. Borde de la ventanita
+            g.setColor(java.awt.Color.WHITE);
+            g.drawRect(xCaja, yCaja, 340, (lineas.length * 16) + 20);
+            
+            // 3. Texto verde estilo programación
+            g.setColor(java.awt.Color.GREEN);
+            g.setFont(new java.awt.Font("Monospaced", java.awt.Font.BOLD, 13));
+            
+            int yTexto = yCaja + 20;
+            for (int i = 0; i < lineas.length; i++) {
+                g.drawString(lineas[i], xCaja + 15, yTexto);
+                yTexto += 16;
+            }
+        }
         g.dispose();
         estrategia.show();
         fps++;
