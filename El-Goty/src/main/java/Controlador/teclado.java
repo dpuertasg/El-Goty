@@ -25,6 +25,7 @@ public class teclado implements KeyListener{
     //tecla para interactuar
     public boolean interactuar; //interactuar con cliente
     public boolean abrirCaja;
+    public boolean verHistorial;
     
     public void actualizar(){
         arriba = teclas[KeyEvent.VK_W];
@@ -34,6 +35,7 @@ public class teclado implements KeyListener{
         guardar = teclas[KeyEvent.VK_G];
         interactuar = teclas[KeyEvent.VK_E];
         abrirCaja = teclas[KeyEvent.VK_F];
+        verHistorial = teclas[KeyEvent.VK_P];
     }
     
     @Override
@@ -50,5 +52,5 @@ public class teclado implements KeyListener{
     public void keyTyped(KeyEvent e) {//pulsar y soltar la tecla
       
     }
-
+    
 }
