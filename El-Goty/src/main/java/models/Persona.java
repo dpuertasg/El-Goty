@@ -8,10 +8,11 @@ package models;
  *
  * @author giral
  */
-public class Persona {
+public abstract class Persona {
     private int cedula;
     private String nombre;
     private int telefono;
+    private String mensajeFlotante = "";
     
     private int x, y; //para poder move a los personajes
     //variables para la animacion
@@ -55,6 +56,14 @@ public class Persona {
     public void setTelefono(int telefono) {
         this.telefono = telefono;
     }
+    public String getMensajeFlotante() {
+    return this.mensajeFlotante;
+    }
+
+    public void setMensajeFlotante(String mensaje) {
+    this.mensajeFlotante = mensaje;
+    }
+    
     
     // metodo de movimiento para el vendedor y comprador
     public void Moverse(int velocidadX, int velocidadY){
@@ -143,5 +152,5 @@ public class Persona {
         }
         return false; // el camino esta limpio
     }
-     
+     public abstract void ejecutarAccion();
 }

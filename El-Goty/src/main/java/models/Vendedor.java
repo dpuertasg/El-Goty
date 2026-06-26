@@ -53,8 +53,8 @@ public class Vendedor extends Persona {
         this.rango = rango;
     }
     
-    public void atenderCliente(){
-
+    @Override
+    public void ejecutarAccion() {
+        this.setMensajeFlotante("¡Atendiendo caja!");
     }
-    
 }

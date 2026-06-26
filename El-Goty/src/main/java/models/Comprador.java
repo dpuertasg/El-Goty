@@ -266,5 +266,8 @@ public class Comprador extends Persona{
            "  \"posicionY\": " + this.getY() + "\n" +
            "}";
     }
-   
+   @Override
+    public void ejecutarAccion() {
+        this.setMensajeFlotante("¡Estoy comprando!");
+    }
 }

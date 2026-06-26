@@ -157,13 +157,34 @@ public class Ventana extends Canvas implements Runnable{
             mostrarBotonCaja = true;
             
             if(Teclado.abrirCaja){
-                //proximo menu de tienda
-                
-                Teclado.abrirCaja = false;
+        if (jugador != null && cliente != null) {
+            int distanciaX1 = Math.abs(jugador.getX() - cliente.getX());
+            int distanciaY1 = Math.abs(jugador.getY() - cliente.getY());
+            
+            if (distanciaX1 < 80 && distanciaY1 < 80) {
+                jugador.setMensajeFlotante("¡Son $50, por favor!");
+                cliente.setMensajeFlotante("¡Gracias por mi compra!");
             }
-        }else{
-            mostrarBotonCaja = false;
         }
+        
+        // 2. Revisar si el "cliente2" está cerca
+        if (jugador != null && cliente2 != null) {
+            int distanciaX2 = Math.abs(jugador.getX() - cliente2.getX());
+            int distanciaY2 = Math.abs(jugador.getY() - cliente2.getY());
+            
+            if (distanciaX2 < 80 && distanciaY2 < 80) {
+                jugador.setMensajeFlotante("¡Llévalo con descuento!");
+                cliente2.setMensajeFlotante("¡Qué buen servicio!");
+            }
+        }
+        
+    } else {
+        // Al SOLTAR la tecla F, limpiamos los mensajes de todos
+        if (jugador != null) jugador.setMensajeFlotante("");
+        if (cliente != null) cliente.setMensajeFlotante("");
+        if (cliente2 != null) cliente2.setMensajeFlotante("");
+    }
+     }
         
         //verificar colision con un objeto
         if (jugador.colisionaConMuebles(proximaX, proximaY, muebles)) {
@@ -245,7 +266,24 @@ public class Ventana extends Canvas implements Runnable{
         
         g.drawImage(imagen, 0, 0, getWidth(),getHeight(),null);
         
-        //boton interactuar
+        g.setColor(java.awt.Color.WHITE);
+        g.setFont(new java.awt.Font("Arial", java.awt.Font.BOLD, 14));
+    
+       // Pintar mensaje del jugador
+        if (jugador != null && !jugador.getMensajeFlotante().equals("")) {
+        g.drawString(jugador.getMensajeFlotante(), jugador.getX(), jugador.getY() - 15);
+        }
+       // Pintar mensaje delcliente
+        if (cliente != null && !cliente.getMensajeFlotante().equals("")) {
+        g.drawString(cliente.getMensajeFlotante(), cliente.getX(), cliente.getY() - 15);
+        }
+
+        // Pintar mensaje del segundo cliente
+        if (cliente2 != null && !cliente2.getMensajeFlotante().equals("")) {
+        g.drawString(cliente2.getMensajeFlotante(), cliente2.getX(), cliente2.getY() - 15);
+    }
+        
+//boton interactuar
         if (mostrarBotonInteraccion) {
             // Calculamos el centro de la pantalla abajo de forma dinamica usando las dimensiones
             int anchoBoton = 300;
